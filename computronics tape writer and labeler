@@ -1,0 +1,16 @@
+tape = peripheral.find("tape_drive")
+
+io.write("Input DIRECT download link to .dfpwm file of any size: ")
+url = io.read()
+io.write("Set cassette label: ")
+label = tostring(io.read())
+tape.setLabel(label)
+
+tape.seek(-tape.getPosition)
+tape.write(response.readAll())
+response.close
+
+textutils.slowPrint("Cassette writing success. Now beginning audio to confirm success.")
+
+tape.seek(-tape.getPosition())
+tape.play()
