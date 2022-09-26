@@ -1,0 +1,36 @@
+local tape = peripheral.find("tape_drive")
+
+--Returns true if position 1 away is zero
+local function seekNCheck()
+	--seek 1 and check
+	tape.seek(1)
+	print("Seeking 1...")
+	if tape.read() == 0 then
+		return true
+	else return false
+	end
+end
+
+--Checks multiple bits into distance to make sure it is actual end of track, and not just a quiet(?) part
+local function seekNCheckMultiple()
+	for i=1,10 do
+		if seekNCheck() == false then
+			return false
+		end
+	end
+	return true
+end
+
+
+-- code begins here
+if not tape then
+textutils.slowPrint("No tape drive! (You may need to edit this program somewhat to suit your peripheral!)")
+return
+end
+
+textutils.slowPrint("Found empty space. Assuming previous track ended, preparing to write next track. Input URL for Direct DL: ")
+url = io.read()
+response = http.get(url, nil, true)
+tape.write(response.readAll())
+response.close
+textutils.slowPrint("Written. Closing program.............")
